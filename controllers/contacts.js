@@ -2,8 +2,20 @@ const { Contact } = require("../models/contacts");
 const { HttpError, ctrlWrapper } = require("../helpers");
 
 const getAll = async (req, res) => {
-  const allContacts = await Contact.find();
-  res.status(200).json(allContacts);
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 20, favorite } = req.query;
+  const skip = (page - 1) * limit;
+  const allContacts = await Contact.find({ owner }, "", { skip, limit });
+
+  let favoriteContacts;
+  if (favorite === "true") {
+    favoriteContacts = allContacts.filter((item) => item.favorite === true);
+  } else if (favorite === "false") {
+    favoriteContacts = allContacts.filter((item) => item.favorite === false);
+  } else {
+    favoriteContacts = allContacts;
+  }
+  res.status(200).json(favorite ? favoriteContacts : allContacts);
 };
 
 const getById = async (req, res) => {
@@ -16,7 +28,8 @@ const getById = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  const result = await Contact.create(req.body);
+  const { _id: owner } = req.user;
+  const result = await Contact.create(...req.body, owner);
   res.status(201).json(result);
 };
 
