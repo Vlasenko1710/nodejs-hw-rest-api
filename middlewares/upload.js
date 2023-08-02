@@ -4,11 +4,11 @@ const path = require("path");
 const tmpDir = path.join(__dirname, "../", "tmp");
 
 const multerConfig = multer.diskStorage({
-    destination: tmpDir,
+  destination: tmpDir,
 });
 
 const upload = multer({
-    storage: multerConfig,
+  storage: multerConfig,
 });
 
 module.exports = upload;

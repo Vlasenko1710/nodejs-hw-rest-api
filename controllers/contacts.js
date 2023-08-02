@@ -10,16 +10,18 @@ const getAll = async (req, res) => {
   if (favorite) {
     filters.favorite = favorite;
   }
-  const allContacts = await Contact.find(filters, { skip, limit }).populate("owner", "email subscription");;
+  const allContacts = await Contact.find(filters, { skip, limit }).populate(
+    "owner",
+    "email subscription"
+  );
 
-  
   res.status(200).json(allContacts);
 };
 
 const getById = async (req, res) => {
   const { contactId } = req.params;
   const { user } = req;
-  const result = await Contact.findOne({_id: contactId, owner:user._id});
+  const result = await Contact.findOne({ _id: contactId, owner: user._id });
   if (!result) {
     throw HttpError(404, "Not Found");
   }
@@ -34,10 +36,14 @@ const add = async (req, res) => {
 
 const updateById = async (req, res) => {
   const { contactId } = req.params;
-  const { body, user} = req;
-  const result = await Contact.findOneAndUpdate({_id: contactId, owner:user._id}, body, {
-    new: true,
-  });
+  const { body, user } = req;
+  const result = await Contact.findOneAndUpdate(
+    { _id: contactId, owner: user._id },
+    body,
+    {
+      new: true,
+    }
+  );
   if (!result) {
     throw HttpError(404, "Not Found");
   }
@@ -46,10 +52,14 @@ const updateById = async (req, res) => {
 
 const updateFavorite = async (req, res) => {
   const { contactId } = req.params;
-  const { body, user} = req;
- const result = await Contact.findOneAndUpdate({_id: contactId, owner:user._id}, body, {
-    new: true,
-  });
+  const { body, user } = req;
+  const result = await Contact.findOneAndUpdate(
+    { _id: contactId, owner: user._id },
+    body,
+    {
+      new: true,
+    }
+  );
   if (!result) {
     throw HttpError(404, "Not Found");
   }
@@ -59,7 +69,10 @@ const updateFavorite = async (req, res) => {
 const deleteById = async (req, res) => {
   const { contactId } = req.params;
   const { user } = req;
-  const result = await Contact.findOneAndDelete({_id: contactId, owner:user._id,});
+  const result = await Contact.findOneAndDelete({
+    _id: contactId,
+    owner: user._id,
+  });
   if (!result) {
     throw HttpError(404, "Not Found");
   }

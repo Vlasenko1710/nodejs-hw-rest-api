@@ -29,6 +29,14 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
   },
   {
     versionKey: false,
@@ -37,7 +45,11 @@ const userSchema = new Schema(
 
 userSchema.post("save", handleMongooseError);
 
-const validateShema = Joi.object({
+const emailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+});
+
+const validateSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().pattern(passwordRegexp).required(),
   subscription: Joi.string(),
@@ -48,8 +60,9 @@ const validateSubscription = Joi.object({
 });
 
 const schemas = {
-  validateShema,
+  validateSchema,
   validateSubscription,
+  emailSchema,
 };
 
 const User = model("user", userSchema);
